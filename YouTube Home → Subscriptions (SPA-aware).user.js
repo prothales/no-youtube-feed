@@ -5,6 +5,8 @@
 // @description  Redirect root "/" to /feed/subscriptions, including clicks on the YouTube logo (client-side navigation).
 // @match        *://*.youtube.com/*
 // @run-at       document-start
+// @updateURL   https://github.com/prothales/no-youtube-feed/raw/refs/heads/main/YouTube%20Home%20%E2%86%92%20Subscriptions%20(SPA-aware).user.js
+// @downloadURL https://github.com/prothales/no-youtube-feed/raw/refs/heads/main/YouTube%20Home%20%E2%86%92%20Subscriptions%20(SPA-aware).user.js
 // @grant        none
 // ==/UserScript==
 
