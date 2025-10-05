@@ -1,0 +1,51 @@
+// ==UserScript==
+// @name         YouTube Home → Subscriptions (SPA-aware)
+// @namespace    http://tampermonkey.net/
+// @version      1.0
+// @description  Redirect root "/" to /feed/subscriptions, including clicks on the YouTube logo (client-side navigation).
+// @match        *://*.youtube.com/*
+// @run-at       document-start
+// @grant        none
+// ==/UserScript==
+
+(function() {
+  'use strict';
+  const TARGET = 'https://www.youtube.com/feed/subscriptions';
+
+  function isRoot() {
+    const p = location.pathname || '/';
+    return (p === '/' || p === '') && !location.pathname.startsWith('/feed/subscriptions');
+  }
+
+  function redirectIfRoot() {
+    try {
+      if (isRoot()) location.replace(TARGET);
+    } catch(e) {}
+  }
+
+  // initial attempt (covers full loads)
+  redirectIfRoot();
+
+  // wrap history methods so SPA navigations trigger a custom event
+  ['pushState','replaceState'].forEach(m => {
+    const orig = history[m];
+    history[m] = function(...args) {
+      const res = orig.apply(this, args);
+      window.dispatchEvent(new Event('locationchange'));
+      return res;
+    };
+  });
+  window.addEventListener('popstate', () => window.dispatchEvent(new Event('locationchange')));
+  window.addEventListener('locationchange', () => setTimeout(redirectIfRoot, 60));
+
+  // listen to YouTube navigation events if present
+  window.addEventListener('yt-navigate-start', redirectIfRoot);
+  window.addEventListener('yt-navigate-finish', redirectIfRoot);
+
+  // lightweight polling fallback
+  let last = location.pathname + location.search + location.hash;
+  setInterval(() => {
+    const cur = location.pathname + location.search + location.hash;
+    if (cur !== last) { last = cur; redirectIfRoot(); }
+  }, 500);
+})();
