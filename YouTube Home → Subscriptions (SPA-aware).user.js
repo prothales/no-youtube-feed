@@ -1,7 +1,11 @@
 // ==UserScript==
 // @name         YouTube Home → Subscriptions (SPA-aware)
-// @namespace    http://tampermonkey.net/
-// @version      1.0
+// @author       prothales
+// @license      MIT
+// @namespace    https://github.com/prothales/no-youtube-feed
+// @homepageURL  https://github.com/prothales/no-youtube-feed
+// @supportURL   https://github.com/prothales/no-youtube-feed/issues
+// @version      1.1
 // @description  Redirect root "/" to /feed/subscriptions, including clicks on the YouTube logo (client-side navigation).
 // @match        *://*.youtube.com/*
 // @run-at       document-start
